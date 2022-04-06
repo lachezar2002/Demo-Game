@@ -1,0 +1,94 @@
+
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<p id="demo"></p>
+<canvas id = "ctx" width="500" height="500" style="border: 1px solid #000000"></canvas>
+<input  id="chatinput">
+   <div id = "chat" style="height: 200; width:  200; overflow-y: scroll;">
+   	<p>acadca</p>
+   </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+    <script>
+    	var ctx = document.getElementById("ctx").getContext("2d");
+    	ctx.font = '30px Arial';
+    	
+var socket = io();
+socket.on('newPosition',function(data){
+	ctx.clearRect(0,0,500,500);
+	for(var i =0;i < data.length;i++){
+
+		ctx.fillText('P',data[i].x,data[i].y);
+	}
+
+    	
+});
+
+
+	console.log("sdad".slice(0,2));
+
+    	
+
+document.addEventListener('keydown', function(event) {
+  switch (event.keyCode) {
+    case 65: // A
+ 
+    socket.emit('Keypress', {inputID:"Left" , state:true});
+  
+      break;
+    case 87: // W
+        socket.emit('Keypress', {inputID:"Up" ,state:true});
+      break;
+    case 68: // D
+      socket.emit('Keypress', {inputID:"Right" ,state:true});
+      break;
+    case 83: // S
+        socket.emit('Keypress',{ inputID:"Down" ,state:true});
+      break;
+  }
+});
+document.addEventListener('keyup', function(event) {
+  switch (event.keyCode) {
+    case 65: // A
+  
+      socket.emit('Keypress',{ inputID:"Left" ,state:false});
+      break;
+    case 87: // W
+       socket.emit('Keypress',{ inputID:"Up" ,state:false});
+      break;
+    case 68: // D
+      socket.emit('Keypress', {inputID:"Right" ,state:false});
+      break;
+    case 83: // S
+       socket.emit('Keypress',{ inputID:"Down" ,state:false});
+      break;
+  }
+});
+
+
+var input = document.getElementById("chatinput");
+input.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+  	console.log(input.value);
+  	socket.emit('Chattext', {nameofplayer:"player" , chat:input.value});
+    input.value = "";
+
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+</script> 
+
+</body>
+</html>
